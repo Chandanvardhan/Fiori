@@ -4,7 +4,6 @@ using my.vbak as vbak from '../db/data-model';
 
 service CatalogService {
     @readonly entity Books as projection on my.Books;
-    @odata.draft.enabled entity VBAK as projection on vbak.VBAK;
-    
+    @odata.draft.enabled @fiori.draft.enabled entity VBAK as projection on vbak.VBAK;
 
 }
