@@ -17,5 +17,6 @@
       ]
     }
   ],
-  "attributes": []
+  "attributes": [],
+  "authorities-inheritance": false
 }
