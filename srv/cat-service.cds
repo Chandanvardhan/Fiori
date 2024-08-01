@@ -6,4 +6,4 @@ service CatalogService {
     @readonly entity Books as projection on my.Books;
     @odata.draft.enabled @fiori.draft.enabled entity VBAK as projection on vbak.VBAK;
 
-}   
+}  
