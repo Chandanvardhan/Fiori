@@ -1,0 +1,11 @@
+applications:
+  - name: bookshop
+    memory: 512M
+    instances: 1
+    path: home/user/projects/bookshop/app/sales/webapp
+    buildpacks:
+      - nodejs_buildpack
+    routes:
+      - route: bookshop.us10-001.hana.ondemand.com
+    services:
+      - test01

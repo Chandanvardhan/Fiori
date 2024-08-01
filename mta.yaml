@@ -105,6 +105,7 @@ resources:
 - name: bookshop-db
   type: com.sap.xs.hdi-container
   parameters:
+    HTML5Runtime_enabled: true
     service: hana
     service-plan: hdi-shared
   properties:
