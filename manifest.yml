@@ -1,11 +1,22 @@
 applications:
-  - name: bookshop
+  - name: booksui
     memory: 512M
     instances: 1
-    path: home/user/projects/bookshop/app/sales/webapp
+    path: /home/user/projects/bookshop/app/booksui/dist
     buildpacks:
       - nodejs_buildpack
     routes:
-      - route: bookshop.us10-001.hana.ondemand.com
+      - route: booksui.us10-001.hana.ondemand.com
+    services:
+      - test01
+
+  - name: sales
+    memory: 512M
+    instances: 1
+    path: /home/user/projects/bookshop/app/sales/dist
+    buildpacks:
+      - nodejs_buildpack
+    routes:
+      - route: sales.us10-001.hana.ondemand.com
     services:
       - test01

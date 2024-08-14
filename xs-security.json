@@ -1,19 +1,41 @@
 {
   "xsappname": "bookshop",
   "tenant-mode": "dedicated",
-  "description": "Security profile of called application",
+  "description": "Security profile for the bookshop CAP project.",
   "scopes": [
     {
-      "name": "uaa.user",
-      "description": "UAA"
+      "name": "$XSAPPNAME.uaa.user",
+      "description": "UAA User scope"
+    },
+    {
+      "name": "$XSAPPNAME.booksui.user",
+      "description": "Scope for accessing the Books UI"
+    },
+    {
+      "name": "$XSAPPNAME.sales.user",
+      "description": "Scope for accessing the Sales application"
     }
   ],
   "role-templates": [
     {
       "name": "Token_Exchange",
-      "description": "UAA",
+      "description": "Role for UAA Token Exchange",
       "scope-references": [
-        "uaa.user"
+        "$XSAPPNAME.uaa.user"
+      ]
+    },
+    {
+      "name": "Books_UI_Access",
+      "description": "Role for accessing the Books UI",
+      "scope-references": [
+        "$XSAPPNAME.booksui.user"
+      ]
+    },
+    {
+      "name": "Sales_Access",
+      "description": "Role for accessing the Sales application",
+      "scope-references": [
+        "$XSAPPNAME.sales.user"
       ]
     }
   ],

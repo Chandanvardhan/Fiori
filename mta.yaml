@@ -81,6 +81,10 @@ modules:
       - sales.zip
       name: sales
       target-path: resources/
+    - artifacts:
+      - project2.zip
+      name: project2
+      target-path: resources/
 - name: mybooksui
   type: html5
   path: app/booksui
@@ -94,6 +98,16 @@ modules:
 - name: sales
   type: html5
   path: app/sales
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: project2
+  type: html5
+  path: app/project2
   build-parameters:
     build-result: dist
     builder: custom
@@ -116,6 +130,7 @@ resources:
     config:
       HTML5Runtime_enabled: true
       init_data:
+        existing_destinations_policy: update
         instance:
           destinations:
           - Authentication: NoAuthentication
@@ -130,7 +145,6 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: ~{srv-api/srv-url}
-          existing_destinations_policy: update
       version: 1.0.0
     service: destination
     service-name: bookshop-destination-service

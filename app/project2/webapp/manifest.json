@@ -1,7 +1,7 @@
 {
   "_version": "1.59.0",
   "sap.app": {
-    "id": "sales",
+    "id": "project2",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -11,9 +11,9 @@
     "description": "{{appDescription}}",
     "resources": "resources.json",
     "sourceTemplate": {
-      "id": "@sap/generator-fiori:lrop",
+      "id": "@sap/generator-fiori:worklist",
       "version": "1.14.2",
-      "toolsId": "85002b60-d7e6-4606-a45e-ae83a0b8e9dc"
+      "toolsId": "3509a463-edfc-4919-ae3b-4420dc9b3978"
     },
     "dataSources": {
       "mainService": {
@@ -27,26 +27,8 @@
     },
     "crossNavigation": {
       "inbounds": {
-        "so-display": {
-          "semanticObject": "so",
-          "action": "display",
-          "title": "{{flpTitle}}",
-          "signature": {
-            "parameters": {},
-            "additionalParameters": "allowed"
-          }
-        },
-        "new-view": {
-          "semanticObject": "new",
-          "action": "view",
-          "title": "{{flpTitle}}",
-          "signature": {
-            "parameters": {},
-            "additionalParameters": "allowed"
-          }
-        },
-        "sales-manage": {
-          "semanticObject": "sales",
+        "test-manage": {
+          "semanticObject": "test",
           "action": "manage",
           "title": "{{flpTitle}}",
           "signature": {
@@ -92,7 +74,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "sales.i18n.i18n"
+          "bundleName": "project2.i18n.i18n"
         }
       },
       "": {
@@ -117,28 +99,29 @@
       "routes": [
         {
           "pattern": ":?query:",
-          "name": "VBAKList",
-          "target": "VBAKList"
+          "name": "vbapList",
+          "target": "vbapList"
         },
         {
-          "pattern": "VBAK({key}):?query:",
-          "name": "VBAKObjectPage",
-          "target": "VBAKObjectPage"
+          "pattern": "vbap({key}):?query:",
+          "name": "vbapObjectPage",
+          "target": "vbapObjectPage"
         }
       ],
       "targets": {
-        "VBAKList": {
+        "vbapList": {
           "type": "Component",
-          "id": "VBAKList",
+          "id": "vbapList",
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "contextPath": "/VBAK",
+              "contextPath": "/vbap",
               "variantManagement": "Page",
+              "hideFilterBar": true,
               "navigation": {
-                "VBAK": {
+                "vbap": {
                   "detail": {
-                    "route": "VBAKObjectPage"
+                    "route": "vbapObjectPage"
                   }
                 }
               },
@@ -152,14 +135,14 @@
             }
           }
         },
-        "VBAKObjectPage": {
+        "vbapObjectPage": {
           "type": "Component",
-          "id": "VBAKObjectPage",
+          "id": "vbapObjectPage",
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/VBAK"
+              "contextPath": "/vbap"
             }
           }
         }
