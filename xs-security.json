@@ -14,6 +14,13 @@
     {
       "name": "$XSAPPNAME.sales.user",
       "description": "Scope for accessing the Sales application"
+    },
+    {
+      "name": "$XSAPPNAME.mtcallback",
+      "description": "Subscription via SaaS Registry",
+      "grant-as-authority-to-apps": [
+        "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+      ]
     }
   ],
   "role-templates": [

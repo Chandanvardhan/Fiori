@@ -1,0 +1,111 @@
+{
+  "_version": "3.0.0",
+  "identification": {
+    "title": "bookshop",
+    "id": "bookshop-flp",
+    "entityType": "bundle"
+  },
+  "payload": {
+    "catalogs": [
+      {
+        "_version": "3.0.0",
+        "identification": {
+          "id": "bookshop-catalog",
+          "title": "{{title}}",
+          "entityType": "catalog",
+          "i18n": "i18n/catalog.properties"
+        },
+        "payload": {
+          "viz": [
+            {
+              "appId": "bookshop.booksui",
+              "vizId": "sales-manage"
+            },
+            {
+              "appId": "bookshop.project2",
+              "vizId": "test-manage"
+            },
+            {
+              "appId": "bookshop.sales",
+              "vizId": "so-display"
+            }
+          ]
+        }
+      }
+    ],
+    "groups": [
+      {
+        "_version": "3.0.0",
+        "identification": {
+          "id": "bookshop-group",
+          "title": "{{title}}",
+          "entityType": "group",
+          "i18n": "i18n/group.properties"
+        },
+        "payload": {
+          "viz": [
+            {
+              "id": "bookshopbooksui-001",
+              "appId": "bookshop.booksui",
+              "vizId": "sales-manage"
+            },
+            {
+              "id": "bookshopproject2-001",
+              "appId": "bookshop.project2",
+              "vizId": "test-manage"
+            },
+            {
+              "id": "bookshopsales-001",
+              "appId": "bookshop.sales",
+              "vizId": "so-display"
+            }
+          ]
+        }
+      }
+    ],
+    "sites": [
+      {
+        "_version": "3.0.0",
+        "identification": {
+          "id": "bookshop-site",
+          "entityType": "site",
+          "title": "bookshop",
+          "description": "A simple CAP project."
+        },
+        "payload": {
+          "config": {
+            "ushellConfig": {
+              "renderers": {
+                "fiori2": {
+                  "componentData": {
+                    "config": {
+                      "applications": {
+                        "Shell-home": {}
+                      },
+                      "enableSearch": true,
+                      "enablePersonalization": true,
+                      "enableSetTheme": true,
+                      "enableSetLanguage": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "groupsOrder": ["bookshop-group"],
+          "sap.cloud.portal": {
+            "config": {
+              "theme.id": "sap_horizon",
+              "theme.active": [
+                "sap_horizon",
+                "sap_horizon_dark",
+                "sap_horizon_hcw",
+                "sap_horizon_hcb"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -3,182 +3,305 @@ ID: bookshop
 description: A simple CAP project.
 version: 1.0.0
 modules:
-- name: bookshop-srv
-  type: nodejs
-  path: gen/srv
-  requires:
-  - name: bookshop-db
-  - name: uaa_bookshop
-  provides:
-  - name: srv-api
-    properties:
-      srv-url: ${default-url}
-  parameters:
-    buildpack: nodejs_buildpack
-    readiness-health-check-http-endpoint: /health
-    readiness-health-check-type: http
-  build-parameters:
-    builder: npm
-- name: bookshop-db-deployer
-  type: hdb
-  path: gen/db
-  requires:
-  - name: bookshop-db
-    properties:
-      TARGET_CONTAINER: ~{hdi-container-name}
-  - name: cross-container-service-1
-    group: SERVICE_REPLACEMENTS
-    properties:
-      key: ServiceName_1
-      service: ~{the-service-name}
-  parameters:
-    buildpack: nodejs_buildpack
-- name: bookshop-destination-content
-  type: com.sap.application.content
-  requires:
-  - name: bookshop-destination-service
-    parameters:
-      content-target: true
-  - name: bookshop_html_repo_host
-    parameters:
-      service-key:
-        name: bookshop_html_repo_host-key
-  - name: uaa_bookshop
-    parameters:
-      service-key:
-        name: uaa_bookshop-key
-  parameters:
-    content:
-      instance:
-        destinations:
-        - Name: fiori_bookshop_html_repo_host
-          ServiceInstanceName: bookshop-html5-app-host-service
-          ServiceKeyName: bookshop_html_repo_host-key
-          sap.cloud.service: fiori
-        - Authentication: OAuth2UserTokenExchange
-          Name: fiori_uaa_bookshop
-          ServiceInstanceName: bookshop-xsuaa-service
-          ServiceKeyName: uaa_bookshop-key
-          sap.cloud.service: fiori
-        existing_destinations_policy: ignore
-  build-parameters:
-    no-source: true
-- name: bookshop-app-content
-  type: com.sap.application.content
-  path: .
-  requires:
-  - name: bookshop_html_repo_host
-    parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
+  - name: bookshop-srv
+    type: nodejs
+    path: gen/srv
     requires:
-    - artifacts:
-      - mybooksui.zip
-      name: mybooksui
-      target-path: resources/
-    - artifacts:
-      - sales.zip
-      name: sales
-      target-path: resources/
-    - artifacts:
-      - project2.zip
-      name: project2
-      target-path: resources/
-- name: mybooksui
-  type: html5
-  path: app/booksui
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: sales
-  type: html5
-  path: app/sales
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-- name: project2
-  type: html5
-  path: app/project2
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-resources:
-- name: bookshop-db
-  type: com.sap.xs.hdi-container
-  parameters:
-    HTML5Runtime_enabled: true
-    service: hana
-    service-plan: hdi-shared
-  properties:
-    hdi-container-name: ${service-name}
-- name: bookshop-destination-service
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      HTML5Runtime_enabled: true
-      init_data:
-        existing_destinations_policy: update
+      - name: uaa_bookshop
+      - name: bookshop-destination-service
+      - name: bookshop-db
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    parameters:
+      buildpack: nodejs_buildpack
+      readiness-health-check-http-endpoint: /health
+      readiness-health-check-type: http
+    build-parameters:
+      builder: npm
+  - name: bookshop-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: bookshop-destination-service
+        parameters:
+          content-target: true
+      - name: bookshop_html_repo_host
+        parameters:
+          service-key:
+            name: bookshop_html_repo_host-key
+      - name: uaa_bookshop
+        parameters:
+          service-key:
+            name: uaa_bookshop-key
+    parameters:
+      content:
         instance:
           destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          - Authentication: NoAuthentication
-            HTML5.DynamicDestination: true
-            HTML5.ForwardAuthToken: true
-            Name: bookshop-srv-api
-            ProxyType: Internet
-            Type: HTTP
-            URL: ~{srv-api/srv-url}
-      version: 1.0.0
-    service: destination
-    service-name: bookshop-destination-service
-    service-plan: lite
-  requires:
-  - name: srv-api
-- name: bookshop_html_repo_host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: bookshop-html5-app-host-service
-    service-plan: app-host
-- name: uaa_bookshop
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      tenant-mode: dedicated
-      xsappname: bookshop-${org}-${space}
-    path: ./xs-security.json
-    service: xsuaa
-    service-name: bookshop-xsuaa-service
-    service-plan: application
-- name: cross-container-service-1
-  type: org.cloudfoundry.existing-service
-  parameters:
-    service-name: IG-Solutions
-  properties:
-    the-service-name: ${service-name}
+            - Name: fiori_bookshop_html_repo_host
+              ServiceInstanceName: bookshop-html5-app-host-service
+              ServiceKeyName: bookshop_html_repo_host-key
+              sap.cloud.service: fiori
+            - Authentication: OAuth2UserTokenExchange
+              Name: fiori_uaa_bookshop
+              ServiceInstanceName: bookshop-xsuaa-service
+              ServiceKeyName: uaa_bookshop-key
+              sap.cloud.service: fiori
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+  - name: bookshop-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: bookshop_html_repo_host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - mybooksui.zip
+          name: mybooksui
+          target-path: resources/
+        - artifacts:
+            - sales.zip
+          name: sales
+          target-path: resources/
+        - artifacts:
+            - project2.zip
+          name: project2
+          target-path: resources/
+  - name: mybooksui
+    type: html5
+    path: app/booksui
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+  - name: sales
+    type: html5
+    path: app/sales
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+  - name: project2
+    type: html5
+    path: app/project2
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+        - npm ci
+        - npm run build
+      supported-platforms:
+        []
+
+  - name: bookshop
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: uaa_bookshop
+      - name: bookshop-html5-runtime
+      - name: bookshop-portal
+      - name: bookshop-destination-service
+      - name: mtx-api
+        group: destinations
+        properties:
+          name: mtx-api # must be used in xs-app.json as well
+          url: ~{mtx-url}
+    properties:
+      TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
+    provides:
+      - name: app-api
+        properties:
+          app-protocol: ${protocol}
+          app-uri: ${default-uri}
+
+  - name: bookshop-app-deployer
+    type: com.sap.application.content
+    path: gen
+    requires:
+      - name: bookshop-html5-repo-host
+        parameters:
+          content-target: true
+      - name: bookshop_html_repo_host
+    build-parameters:
+      build-result: app/
+      requires:
+        - name: bookshopbooksui
+          artifacts:
+            - booksui.zip
+          target-path: app/
+        - name: bookshopproject2
+          artifacts:
+            - project2.zip
+          target-path: app/
+        - name: bookshopsales
+          artifacts:
+            - sales.zip
+          target-path: app/
+
+  - name: bookshop-portal-deployer
+    type: com.sap.application.content
+    path: app/portal
+    requires:
+      - name: bookshop-portal
+        parameters:
+          content-target: true
+          service-key:
+            name: bookshop-portal-key
+            config:
+              content-endpoint: developer
+      - name: bookshop-auth
+      - name: bookshop-html5-repo-host
+      - name: bookshop-app-deployer
+    deployed-after:
+      - bookshop-app-deployer
+    parameters:
+      config:
+        TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
+
+  - name: bookshop-mtx
+    type: nodejs
+    path: gen/mtx/sidecar
+    build-parameters:
+      builder: npm-ci
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
+    requires:
+      - name: bookshop-auth
+      - name: bookshop-registry
+      - name: app-api
+        properties:
+          SUBSCRIPTION_URL: ~{app-protocol}://\${tenant_subdomain}-~{app-uri}
+      - name: bookshop-destination-service
+      - name: bookshop-db
+      - name: bookshop-html5-runtime
+      - name: bookshop-portal
+      - name: uaa_bookshop
+resources:
+  - name: bookshop-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          existing_destinations_policy: update
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+              - Authentication: NoAuthentication
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+                Name: bookshop-srv-api
+                ProxyType: Internet
+                Type: HTTP
+                URL: ~{srv-api/srv-url}
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: bookshop-destination-service
+      service-plan: lite
+    requires:
+      - name: srv-api
+  - name: bookshop_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: bookshop-html5-app-host-service
+      service-plan: app-host
+  - name: uaa_bookshop
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        tenant-mode: shared
+        xsappname: bookshop-${org}-${space}
+      path: ./xs-security.json
+      service: xsuaa
+      service-name: bookshop-xsuaa-service
+      service-plan: application
+  - name: cross-container-service-1
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: IG-Solutions
+    properties:
+      the-service-name: ${service-name}
+  - name: bookshop-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+  - name: bookshop-portal
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: portal
+      service-plan: standard
+  - name: bookshop-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: mtx-api
+    parameters:
+      service: saas-registry
+      service-plan: application
+      config:
+        xsappname: bookshop-${org}-${space}
+        appName: bookshop-${org}-${space}
+        displayName: bookshop
+        description: A simple CAP project.
+        category: 'Category'
+        appUrls:
+          getDependencies: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/dependencies
+          onSubscription: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/tenant/{tenantId}
+          onSubscriptionAsync: true
+          onUnSubscriptionAsync: true
+          onUpdateDependenciesAsync: true
+          callbackTimeoutMillis: 300000 # Increase if your deployments are taking longer than that
+  - name: bookshop-db
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-  - builder: custom
-    commands:
-    - npm ci
-    - npx cds build --production
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production

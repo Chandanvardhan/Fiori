@@ -8,6 +8,7 @@
   "dependencies": {
     "@sap/cds": "^7",
     "@sap/cds-hana": "^2",
+    "@sap/cds-mtxs": "^2",
     "@sap/xssec": "^3",
     "express": "^4"
   },
@@ -32,9 +33,15 @@
     "requires": {
       "[production]": {
         "db": "hana",
-        "auth": "xsuaa"
-      }
-    }
+        "auth": "xsuaa",
+        "multitenancy": true
+      },
+      "html5-repo": true,
+      "portal": true,
+      "destinations": true,
+      "workzone": true
+    },
+    "profile": "with-mtx-sidecar"
   },
   "sapux": [
     "app/booksui",
